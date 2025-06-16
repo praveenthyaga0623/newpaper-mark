@@ -278,6 +278,10 @@ ul > *:nth-child(3n+2) {
   position: relative;
   width: 90%;
 }
+
+  .card h2 {
+  
+  font-size: 20px;}
 }
 
 
