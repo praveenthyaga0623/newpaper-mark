@@ -40,11 +40,19 @@ body {
 .card {
   position: relative;
   width: 60%;
-  height: fit-content;
+ 
   padding: 30px;
   border-radius: 50px;
   background: var(--bg-color);
   box-shadow: 12px 12px 24px var(--boxshadow-c1), -12px -12px 24px var(--boxshadow-c2);
+}
+
+.card1{
+   height: fit-content;
+}
+
+.card2 {
+  height: 600px;
 }
 
 .card h2 {
