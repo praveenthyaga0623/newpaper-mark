@@ -13,7 +13,7 @@
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <script>
  
    const firebaseConfig = {
@@ -29,6 +29,19 @@
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
+
+  firebase.auth().signInAnonymously()
+    .then(() => {
+      console.log("Signed in anonymously");
+
+      // Load script.js only after auth
+      const script = document.createElement("script");
+      script.src = "./script.js";
+      document.body.appendChild(script);
+    })
+    .catch((error) => {
+      console.error("Auth failed:", error);
+    });
 </script>
 
 
@@ -59,7 +72,9 @@
     
           <div><button id="myButton" onclick="addData()" ondblclick="" class="add">ADD</button>
           
-          
+          <div style="text-align: center; margin-top: 1rem;">
+  <button onclick="saveToGoogleSheet()" class="add">Save to Google Sheet</button>
+</div>
           </div>
         </div>
         
@@ -67,7 +82,7 @@
         </ul>
   </div>
 
-  <script src="./script.js"></script>
+  <!-- <script src="./script.js"></script> -->
 </body>
 
 </html>
