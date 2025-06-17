@@ -1,39 +1,34 @@
+/* === IMPORT FONTS === */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
 
+/* === ROOT VARIABLES === */
 :root {
-  --color-text: #505050;
   --font-family: 'Poppins', sans-serif;
+  --color-text: #505050;
   --bg-color: #D1D8EC;
-  --bg-color2 : #11111111;
-
+  --bg-color2: #11111111;
   --boxshadow-c1: #b2b8c9;
   --boxshadow-c2: #f0f8ff;
-
 }
 
-.darkmode{
+/* === DARK MODE OVERRIDES === */
+.darkmode {
   --color-text: #fff;
   --bg-color: #262626;
- --bg-color2 : #ffffff11;
-
-
+  --bg-color2: #ffffff11;
   --boxshadow-c1: #202020;
   --boxshadow-c2: #2c2c2c;
-
-  
 }
 
-/*background: #262626;
--webkit-box-shadow: 12px 12px 24px #202020, -12px -12px 24px #2c2c2c;
-box-shadow: 12px 12px 24px #202020, -12px -12px 24px #2c2c2c; */
-
+/* === GLOBAL RESET === */
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;  
-  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+  font-family: var(--font-family);
 }
 
+/* === BODY STYLING === */
 body {
   height: 100vh;
   display: grid;
@@ -41,15 +36,15 @@ body {
   background: var(--bg-color);
 }
 
+/* === CARD COMPONENT === */
 .card {
   position: relative;
   width: 60%;
-  height: 600px;
+  height: fit-content;
   padding: 30px;
   border-radius: 50px;
-border-radius: 50px;
-background: var(--bg-color);
-box-shadow: 12px 12px 24px var(--boxshadow-c1), -12px -12px 24px var(--boxshadow-c2);
+  background: var(--bg-color);
+  box-shadow: 12px 12px 24px var(--boxshadow-c1), -12px -12px 24px var(--boxshadow-c2);
 }
 
 .card h2 {
@@ -70,16 +65,11 @@ box-shadow: 12px 12px 24px var(--boxshadow-c1), -12px -12px 24px var(--boxshadow
   position: relative;
 }
 
-
-
-
-/* STYLESHEET 2 */
-
+/* === FORM / INPUT GROUP === */
 .input-group {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* flex-wrap: wrap; */
   gap: 1rem;
 }
 
@@ -90,7 +80,6 @@ box-shadow: 12px 12px 24px var(--boxshadow-c1), -12px -12px 24px var(--boxshadow
 }
 
 label {
-  /* display: block; */
   font-weight: 500;
   color: var(--color-text);
 }
@@ -101,16 +90,16 @@ input {
   font-size: 15px;
   background-color: var(--bg-color2);
   color: var(--color-text);
-  border-radius: 10px;
   border: none;
+  border-radius: 10px;
   outline: none;
-  
 }
 
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+/* Remove number input arrows in WebKit */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 button {
@@ -120,11 +109,11 @@ button {
   cursor: pointer;
 }
 
+/* === LIST DISPLAY === */
 ul {
   width: 100%;
   max-height: 80%;
   margin-top: 1.5rem;
-  /* margin: 1.5rem; */
   display: grid;
   grid-template-columns: repeat(3, auto);
   list-style: none;
@@ -132,8 +121,10 @@ ul {
   overflow-x: hidden;
 }
 
-
-
+ul::-webkit-scrollbar {
+  width: 10px;
+  display: none;
+}
 
 ul li {
   display: flex;
@@ -141,27 +132,24 @@ ul li {
   padding-bottom: 5px;
 }
 
+/* === RENDERED ITEM GRID === */
 .renderlist {
   color: var(--color-text);
-  display: inline-grid;
+  display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 5px;
-} 
+}
 
 .renderlist div {
   display: flex;
   align-items: center;
 }
 
-.edit,.del {
-  /* width: 30px; */
-  /* height: 30px; */
-
+.edit, .del {
   font-size: 1.3rem;
   padding: 5px 10px;
   background-color: var(--bg-color2);
   border-radius: 50px;
-
   display: grid;
   place-content: center;
 }
@@ -174,122 +162,81 @@ ul li {
   color: red;
 }
 
-
-/* === Scrollbar === */
-ul::-webkit-scrollbar {
-  width: 10px;
-  display: none;
-}
-
-
-
-
+/* === ADD BUTTON === */
 .add {
   width: 70px;
   padding: 5px 10px;
   font-size: 15px;
-  border-radius: 10px;
+  font-weight: 900;
   border: none;
   outline: none;
-  font-weight: 900;
+  border-radius: 10px;
   background-color: #6EC207;
 }
 
+/* === LIST ITEM BORDERS === */
 ul > *:nth-child(3n+1),
 ul > *:nth-child(3n+2) {
   border-right: 2px solid var(--color-text);
-
 }
 
+/* === RESPONSIVE BREAKPOINTS === */
 
-
-@media only screen and  (max-width: 1200px) {
+/* <= 1200px */
+@media (max-width: 1200px) {
   ul {
-     grid-template-columns: repeat(2, auto);
+    grid-template-columns: repeat(2, auto);
   }
 
-   ul > *:nth-child(3n+1),
-ul > *:nth-child(3n+2) {
-  border-right: 0px solid #333;
-
-}
-
-  ul > *:nth-child(2n+1)  {
-  border-right: 2px solid var(--color-text);
-}
-
-}
-
-@media only screen and  (max-width: 900px) {
-  ul {
-     grid-template-columns: repeat(1, auto);
+  ul > *:nth-child(3n+1),
+  ul > *:nth-child(3n+2) {
+    border-right: 0;
   }
 
-
-
-.input-group {
-  display: grid;
-  grid-template-columns: 1fr;
-  justify-content: space-around;
-  
+  ul > *:nth-child(2n+1) {
+    border-right: 2px solid var(--color-text);
+  }
 }
 
-.input-group  .add {
-justify-content: center;}
-.input-group > div {
-  display: flex;
-  justify-content: center;
+/* <= 900px */
+@media (max-width: 900px) {
+  ul {
+    grid-template-columns: 1fr;
+    max-height: 65%;
+  }
+
+  .input-group {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .input-group > div {
+    justify-content: center;
+  }
+
+  .add {
+    width: 150px;
+    justify-content: center;
+  }
+
+  ul > *:nth-child(3n+1),
+  ul > *:nth-child(3n+2),
+  ul > *:nth-child(2n+1) {
+    border-right: 0;
+  }
 }
 
-.input-group {
-  /* display: flex; */
-  justify-content: center;
-  align-items: center;
-  /* flex-wrap: wrap; */
+/* <= 600px */
+@media (max-width: 600px) {
+  .card {
+    width: 90%;
+  }
 }
 
-
-
-.add {
-  width: 150px;
-}
-
-ul {
-  width: 100%;
-  max-height: 65%;
-
-
-}
-
- ul > *:nth-child(3n+1),
-ul > *:nth-child(3n+2) {
-  border-right: 0px solid #333;
-
-}
-
-  ul > *:nth-child(2n+1)  {
-  border-right: 0px solid #333;
-}
-
-}
-
-@media only screen and  (max-width: 600px) {
-.card {
-  position: relative;
-  width: 90%;
-}
-
-  .card h2 {
-  
-  font-size: 20px;}
-}
-
-
-
-
-/* dark1 */
-
-#theme-switch{
+/* === THEME SWITCH BUTTON === */
+#theme-switch {
   height: 50px;
   width: 50px;
   padding: 0;
@@ -302,15 +249,19 @@ ul > *:nth-child(3n+2) {
   top: 20px;
   right: 20px;
 }
-#theme-switch svg{
+
+#theme-switch svg {
   fill: var(--color-text);
 }
-#theme-switch svg:last-child{
+
+#theme-switch svg:last-child {
   display: none;
 }
-.darkmode #theme-switch svg:first-child{
+
+.darkmode #theme-switch svg:first-child {
   display: none;
 }
-.darkmode #theme-switch svg:last-child{
+
+.darkmode #theme-switch svg:last-child {
   display: block;
 }
