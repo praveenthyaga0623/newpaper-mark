@@ -1,12 +1,10 @@
-// script.js (Modified to use Firebase instead of localStorage)
-
-// ====== Firebase Setup ======
+// ==================== Firebase Setup ====================
 const dbRef = firebase.database().ref("marks");
 
 let xData = [];
 let yData = [];
 
-// ====== Load Data from Firebase ======
+// Load data from Firebase and update chart
 dbRef.once("value", (snapshot) => {
   const data = snapshot.val() || {};
   xData = Object.keys(data);
@@ -14,22 +12,18 @@ dbRef.once("value", (snapshot) => {
   updateChart();
 });
 
-// ====== Get CSS Variables ======
+// ==================== Chart Styling from CSS ====================
 const styles = getComputedStyle(document.documentElement);
-const colorPrimary = styles.getPropertyValue("--color-primary").trim();
-const colorLabel = styles.getPropertyValue("--color-label").trim();
 const colorText = styles.getPropertyValue("--color-text").trim();
 const fontFamily = styles.getPropertyValue("--font-family").trim();
-const lightTextColor = colorText;
-const darkTextColor = "#ffffff22";
 
-// ====== Chart Configuration ======
+// ==================== Chart Configuration ====================
 const chartOptions = {
   chart: {
     type: "bar",
-    toolbar: { show: false },
     height: 500,
     background: "transparent",
+    toolbar: { show: false },
   },
   plotOptions: {
     bar: {
@@ -50,15 +44,11 @@ const chartOptions = {
   },
   dataLabels: {
     enabled: true,
-    position: 'top',
     offsetY: -15,
-    formatter: function (val) {
-      if (val === 0) return "AB";
-      if (val === 100) return "";
-      return val;
-    },
+    position: "top",
+    formatter: (val) => (val === 0 ? "AB" : val === 100 ? "" : val),
     style: {
-      fontSize: '10px',
+      fontSize: "10px",
       fontFamily: fontFamily,
       colors: [colorText],
     },
@@ -69,7 +59,10 @@ const chartOptions = {
     labels: {
       rotate: -90,
       show: true,
-      style: { colors: colorText, fontFamily },
+      style: {
+        colors: colorText,
+        fontFamily: fontFamily,
+      },
     },
     axisTicks: { show: false },
     axisBorder: { show: false },
@@ -79,67 +72,71 @@ const chartOptions = {
     max: 100,
     labels: {
       show: true,
-      style: { colors: colorText, fontFamily },
+      style: {
+        colors: colorText,
+        fontFamily: fontFamily,
+      },
     },
     axisBorder: { show: false },
   },
-  colors: [colorPrimary],
-  grid: { show: true, borderColor: colorText },
+  grid: {
+    show: true,
+    borderColor: colorText,
+  },
   tooltip: {
-    enabled: false,
+    enabled: true,
     followCursor: false,
     custom: ({ series, seriesIndex, dataPointIndex }) =>
-      `<div style="padding: 1px 5px; color: #333; background: #eee; border-radius: 4px;"><strong>${series[seriesIndex][dataPointIndex]}%</strong></div>`
-  }
+      `<div style="padding: 1px 5px; color: #333; background: #eee; border-radius: 4px;"><strong>${series[seriesIndex][dataPointIndex]}%</strong></div>`,
+  },
 };
 
+// Mobile font size adjustments
 if (window.innerWidth < 900) {
   chartOptions.xaxis.labels.style.fontSize = "6px";
   chartOptions.yaxis.labels.style.fontSize = "8px";
   chartOptions.dataLabels.style.fontSize = "0px";
 }
 
+// Initialize chart
 const chart = new ApexCharts(document.querySelector(".area-chart"), chartOptions);
 chart.render();
 
-// ====== Dark/Light Theme Toggle ======
-let darkmode = localStorage.getItem('darkmode');
-const themeSwitch = document.getElementById('theme-switch');
+// ==================== Theme Toggle ====================
+let darkmode = localStorage.getItem("darkmode");
+const themeSwitch = document.getElementById("theme-switch");
 
 const enableDarkmode = () => {
-  document.body.classList.add('darkmode');
-  localStorage.setItem('darkmode', 'active');
+  document.body.classList.add("darkmode");
+  localStorage.setItem("darkmode", "active");
 };
 
 const disableDarkmode = () => {
-  document.body.classList.remove('darkmode');
-  localStorage.setItem('darkmode', null);
+  document.body.classList.remove("darkmode");
+  localStorage.setItem("darkmode", null);
 };
 
-if(darkmode === "active") enableDarkmode();
+if (darkmode === "active") enableDarkmode();
 
 themeSwitch.addEventListener("click", () => {
-  darkmode = localStorage.getItem('darkmode');
-  const isActivatingDark = darkmode !== "active";
-  isActivatingDark ? enableDarkmode() : disableDarkmode();
+  darkmode = localStorage.getItem("darkmode");
+  darkmode !== "active" ? enableDarkmode() : disableDarkmode();
 });
 
-document.addEventListener("keydown", function(event) {
+// Keyboard Enter to Add
+document.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     document.getElementById("myButton").click();
   }
 });
 
-// ====== Save to Firebase ======
+// ==================== Data Handling ====================
 function saveDataToFirebase() {
   const data = {};
-  xData.forEach((x, i) => {
-    data[x] = yData[i];
-  });
+  xData.forEach((x, i) => (data[x] = yData[i]));
   dbRef.set(data);
 }
 
-// ====== Chart Update ======
 function updateChart() {
   chart.updateOptions({
     series: [{ data: yData }],
@@ -148,10 +145,10 @@ function updateChart() {
   renderList();
 }
 
-// ====== Add Data ======
 function addData() {
   const xInput = document.getElementById("xValue");
   const yInput = document.getElementById("yValue");
+
   const xVal = xInput.value.trim();
   const yVal = parseFloat(yInput.value);
 
@@ -167,10 +164,29 @@ function addData() {
   }
 }
 
-// ====== Render List ======
+function editData(index) {
+  const newX = prompt("Enter new X value:", xData[index]);
+  const newY = prompt("Enter new Y value:", yData[index]);
+
+  if (newX !== null && newY !== null && !isNaN(parseFloat(newY))) {
+    xData[index] = newX.trim();
+    yData[index] = parseFloat(newY);
+    updateChart();
+    saveDataToFirebase();
+  }
+}
+
+function deleteData(index) {
+  xData.splice(index, 1);
+  yData.splice(index, 1);
+  updateChart();
+  saveDataToFirebase();
+}
+
 function renderList() {
   const list = document.getElementById("dataList");
   list.innerHTML = "";
+
   xData.forEach((x, i) => {
     const li = document.createElement("li");
     li.innerHTML = `
@@ -184,25 +200,5 @@ function renderList() {
   });
 }
 
-// ====== Edit Data ======
-function editData(index) {
-  const newX = prompt("Enter new X value:", xData[index]);
-  const newY = prompt("Enter new Y value:", yData[index]);
-
-  if (newX !== null && newY !== null && !isNaN(parseFloat(newY))) {
-    xData[index] = newX;
-    yData[index] = parseFloat(newY);
-    updateChart();
-    saveDataToFirebase();
-  }
-}
-
-// ====== Delete Data ======
-function deleteData(index) {
-  xData.splice(index, 1);
-  yData.splice(index, 1);
-  updateChart();
-  saveDataToFirebase();
-}
-
+// Initial rendering of list
 renderList();
